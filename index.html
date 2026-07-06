@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generator Website PPI Cabang</title>
+  <meta name="description" content="Website generator satu halaman untuk PPI Cabang di Jerman.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    :root {
+      --navy: #14213D;
+      --navy-2: #1d2f57;
+      --red: #C1272D;
+      --red-soft: #fbeaea;
+      --paper: #F7F7F5;
+      --card: #FFFFFF;
+      --line: #E4E4DE;
+      --ink: #22263A;
+      --muted: #6b7080;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.55
+    }
+
+    button {
+      font-family: inherit
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      width: 100%
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid var(--navy);
+      outline-offset: 1px;
+      border-color: var(--navy)
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 72px
+    }
+
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--navy);
+      margin: 10px 0 4px;
+      letter-spacing: .01em
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    header.app {
+      background: linear-gradient(115deg, var(--navy) 40%, var(--navy-2) 70%, #4a1a22);
+      color: #fff;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden
+    }
+
+    header.app::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(193, 39, 45, .5), transparent 70%);
+      top: -140px;
+      right: -60px;
+      pointer-events: none
+    }
+
+    header.app>* {
+      position: relative;
+      z-index: 1
+    }
+
+    header.app .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--red);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: .02em
+    }
+
+    header.app h1 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 700
+    }
+
+    header.app p {
+      margin: 0;
+      font-size: 12.5px;
+      opacity: .75
+    }
+
+    header.app .spacer {
+      flex: 1
+    }
+
+    .btn {
+      border: none;
+      border-radius: 9px;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .06s ease, box-shadow .15s ease
+    }
+
+    .btn:active {
+      transform: translateY(1px)
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff
+    }
+
+    .btn-red:hover {
+      box-shadow: 0 4px 14px rgba(193, 39, 45, .35)
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .35)
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12.5px;
+      border-radius: 7px
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--line)
+    }
+
+    .btn-outline:hover {
+      border-color: var(--navy)
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 430px 1fr;
+      min-height: calc(100vh - 62px)
+    }
+
+    @media(max-width:980px) {
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .preview-col {
+        min-height: 70vh
+      }
+    }
+
+    .form-col {
+      background: var(--paper);
+      border-right: 1px solid var(--line);
+      overflow-y: auto;
+      max-height: calc(100vh - 62px);
+      padding: 18px
+    }
+
+    @media(max-width:980px) {
+      .form-col {
+        max-height: none
+      }
+    }
+
+    details.acc {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px -12px rgba(20, 33, 61, .18)
+    }
+
+    details.acc[open] {
+      box-shadow: 0 10px 28px -14px rgba(20, 33, 61, .28)
+    }
+
+    .swatch.logo-sw {
+      border-style: dashed;
+      position: relative
+    }
+
+    .swatch.logo-sw::after {
+      content: "★";
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center
+    }
+
+    details.acc>summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 13px 16px;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none
+    }
+
+    details.acc>summary::-webkit-details-marker {
+      display: none
+    }
+
+    details.acc>summary .step {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 11.5px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      flex: none
+    }
+
+    details.acc>summary .chev {
+      margin-left: auto;
+      transition: transform .2s;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    details.acc[open]>summary .chev {
+      transform: rotate(90deg)
+    }
+
+    details.acc .acc-body {
+      padding: 4px 16px 16px;
+      border-top: 1px solid var(--line)
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 6px 0;
+      cursor: pointer
+    }
+
+    .check input {
+      width: auto;
+      accent-color: var(--red)
+    }
+
+    .sec-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 10px;
+      margin-bottom: 7px
+    }
+
+    .sec-item.off {
+      opacity: .5
+    }
+
+    .sec-item .nm {
+      flex: 1;
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--navy)
+    }
+
+    .sec-item .mv {
+      display: flex;
+      gap: 4px
+    }
+
+    .sec-item .mv button {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #fafafa;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--navy)
+    }
+
+    .sec-item .mv button:hover {
+      background: var(--red-soft);
+      border-color: var(--red);
+      color: var(--red)
+    }
+
+    .sec-item input[type=checkbox] {
+      width: auto;
+      accent-color: var(--red)
+    }
+
+    .swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 6px 0
+    }
+
+    .swatch {
+      width: 74px;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      padding: 6px;
+      cursor: pointer;
+      background: #fff;
+      text-align: center
+    }
+
+    .swatch.on {
+      border-color: var(--red)
+    }
+
+    .swatch .dots {
+      display: flex;
+      height: 20px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 4px
+    }
+
+    .swatch .dots i {
+      flex: 1
+    }
+
+    .swatch span {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted)
+    }
+
+    .list-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      background: #fff;
+      position: relative
+    }
+
+    .list-item .del {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      padding: 4px
+    }
+
+    .list-item .del:hover {
+      color: var(--red)
+    }
+
+    .add-btn {
+      margin-top: 4px
+    }
+
+    .file-drop {
+      border: 1.5px dashed var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff
+    }
+
+    .file-drop img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: var(--paper)
+    }
+
+    .file-drop .fi {
+      flex: 1;
+      font-size: 12.5px;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .file-drop input {
+      display: none
+    }
+
+    .lang-tabs {
+      display: flex;
+      gap: 6px;
+      margin: 8px 0 2px
+    }
+
+    .lang-tabs button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--muted)
+    }
+
+    .lang-tabs button.on {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy)
+    }
+
+    .preview-col {
+      display: flex;
+      flex-direction: column;
+      background: #e9e9e4
+    }
+
+    .preview-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px)
+    }
+
+    .preview-bar .ttl {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 13.5px
+    }
+
+    .dev-toggle {
+      display: flex;
+      gap: 4px;
+      margin-left: auto
+    }
+
+    .dev-toggle button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 7px;
+      padding: 5px 12px;
+      font-size: 12.5px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    .dev-toggle button.on {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy)
+    }
+
+    .preview-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      overflow: auto
+    }
+
+    #previewFrame {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
+      min-height: 640px;
+      box-shadow: 0 10px 30px rgba(20, 33, 61, .12);
+      transition: width .25s
+    }
+
+    .preview-wrap.mobile #previewFrame {
+      width: 390px
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+      z-index: 9999
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="app">
+    <div class="mark">PPI</div>
+    <div>
+      <h1>Generator Website PPI Cabang</h1>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btnResetCfg" type="button">Reset</button>
+    <button class="btn btn-red" id="btnDownload" type="button">⬇ Unduh ZIP Website</button>
+  </header>
+
+  <div class="layout">
+    <div class="form-col" id="formCol">
+
+      <details class="acc" open>
+        <summary><span class="step">1</span> Identitas Cabang <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <label for="f_name">Nama PPI Cabang</label>
+          <input id="f_name" data-bind="name" placeholder="PPI Müster">
+          <div class="row">
+            <div><label for="f_city">Kota</label><input id="f_city" data-bind="city" placeholder="Müster"></div>
+            <div><label for="f_email">Email kontak</label><input id="f_email" data-bind="email"
+                placeholder="info@ppimuester.de"></div>
+          </div>
+          <label>Logo PPI Cabang (PNG/SVG, latar transparan)</label>
+          <div class="file-drop">
+            <img id="logoPrev" alt="" src="" style="display:none" onload="this.style.display='block'">
+            <div class="fi" id="logoInfo">Belum ada logo — placeholder akan dipakai.</div>
+            <button class="btn btn-outline btn-sm" type="button"
+              onclick="document.getElementById('f_logo').click()">Pilih file</button>
+            <input type="file" id="f_logo" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+          </div>
+          <label>Favicon (PNG persegi, mis. 256×256)</label>
+          <div class="file-drop">
+            <img id="favPrev" alt="" src="" style="display:none" onload="this.style.display='block'">
+            <div class="fi" id="favInfo">Belum ada favicon — logo akan dipakai jika ada.</div>
+            <button class="btn btn-outline btn-sm" type="button"
+              onclick="document.getElementById('f_fav').click()">Pilih file</button>
+            <input type="file" id="f_fav" accept="image/png,image/x-icon,image/svg+xml">
+          </div>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">2</span> Bahasa <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p class="hint" style="margin-top:8px">Bahasa Indonesia selalu aktif sebagai bahasa utama. Aktifkan bahasa
+            lain untuk menampilkan tombol pengalih bahasa di website.</p>
+          <label class="check"><input type="checkbox" checked disabled> Bahasa Indonesia (utama)</label>
+          <label class="check"><input type="checkbox" id="lang_en" data-lang="en"> English</label>
+          <label class="check"><input type="checkbox" id="lang_de" data-lang="de"> Deutsch</label>
+          <p class="hint">Isi konten per bahasa lewat tab <b>ID / EN / DE</b> di bagian konten. Kolom yang kosong
+            otomatis memakai teks bahasa Indonesia.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">3</span> Bagian &amp; Urutan <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p class="hint" style="margin-top:8px">Centang untuk menampilkan bagian, gunakan ▲▼ untuk mengatur urutan.
+            Hero Banner selalu berada paling atas dan tidak dapat dipindah.</p>
+          <div id="heroPin"></div>
+          <div id="sectionList"></div>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">4</span> Konten <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <div class="lang-tabs" id="langTabs">
+            <button type="button" data-lt="id" class="on">ID</button>
+            <button type="button" data-lt="en" hidden>EN</button>
+            <button type="button" data-lt="de" hidden>DE</button>
+          </div>
+          <div id="contentForms"></div>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">5</span> Tampilan <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <label>Tema warna</label>
+          <div class="swatches" id="themeSwatches"></div>
+          <div class="row">
+            <div><label for="c_primary">Warna utama</label><input type="color" id="c_primary"
+                style="height:38px;padding:3px"></div>
+            <div><label for="c_accent">Warna aksen</label><input type="color" id="c_accent"
+                style="height:38px;padding:3px"></div>
+          </div>
+          <label for="f_font">Huruf (font)</label>
+          <select id="f_font">
+            <option value="jakarta">Plus Jakarta Sans — elegan &amp; modern</option>
+            <option value="inter">Inter — netral &amp; modern</option>
+            <option value="poppins">Poppins — geometris &amp; ramah</option>
+            <option value="serif">Source Serif 4 + Inter — formal</option>
+            <option value="grotesk">Space Grotesk + Inter — tegas</option>
+          </select>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">6</span> Impressum <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p class="hint" style="margin-top:10px">⚠️ Menurut § 5 DDG, website organisasi di Jerman umumnya wajib memiliki Impressum (Impressumspflicht). Halaman Impressum yang dibuat oleh generator ini mengacu pada badan hukum induk PPI Cabang.</p>
+          <p class="hint">Sebelum menyertakan Impressum, pastikan Anda telah meminta izin kepada pihak yang berwenang (mis. PPI Jerman) untuk mencantumkan data mereka.</p>
+          <label class="check" style="margin-top:8px"><input type="checkbox" id="imp_permission"> Saya telah mendapat izin untuk menyertakan Impressum</label>
+          <label class="check" style="margin-top:4px"><input type="checkbox" id="inc_imp" disabled> Sertakan halaman Impressum</label>
+          <div id="imp_fields" style="opacity:.4;pointer-events:none">
+            <label for="imp_contact">Penanggung jawab konten cabang (nama)</label>
+            <input id="imp_contact" data-bind="impressum.contactName" placeholder="Nama Ketua PPI Cabang">
+            <label for="imp_email">Email penanggung jawab</label>
+            <input id="imp_email" data-bind="impressum.contactEmail" placeholder="ketua@ppicabang.de">
+            <label for="imp_addr">Alamat korespondensi (opsional)</label>
+            <textarea id="imp_addr" data-bind="impressum.address" placeholder="c/o ..., Jalan ..., Kota"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="step">7</span> Halaman Admin (Decap CMS) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <label class="check" style="margin-top:10px"><input type="checkbox" id="inc_adm" checked> Sertakan halaman
+            admin (Decap CMS)</label>
+          <p class="hint">ZIP menyertakan halaman <code>/admin</code> berbasis Decap CMS agar pengurus dapat mengedit
+            konten tanpa menyentuh kode. Isi data repositori dan konfigurasi backend sesuai platform hosting yang digunakan.</p>
+          <label for="d_repo">Repositori (owner/repo)</label>
+          <input id="d_repo" data-bind="decap.repo" placeholder="ppi-muester/website">
+          <label for="d_branch">Branch</label>
+          <input id="d_branch" data-bind="decap.branch" placeholder="main">
+          <label for="d_oauth">Base URL OAuth (opsional)</label>
+          <input id="d_oauth" data-bind="decap.oauthBase" placeholder="https://oauth.contoh.dev">
+          <p class="hint">Petunjuk lengkap penyiapan admin ada di <code>README.md</code> dalam ZIP.</p>
+        </div>
+      </details>
+
+    </div>
+
+    <div class="preview-col">
+      <div class="preview-bar">
+        <span class="ttl">Pratinjau langsung</span>
+        <div class="dev-toggle">
+          <button type="button" id="devDesk" class="on">Desktop</button>
+          <button type="button" id="devMob">Ponsel</button>
+        </div>
+      </div>
+      <div class="preview-wrap" id="previewWrap">
+        <iframe id="previewFrame" title="Pratinjau website"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="text/plain" id="tpl-sitecss">
+:root{--p:#14213D;--a:#C1272D;--ink:#212536;--muted:#5f6474;--paper:#FFFFFF;--soft:#F6F6F3;--line:#E7E7E1;--fd:'Plus Jakarta Sans',sans-serif;--fb:'Plus Jakarta Sans',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;overflow-x:hidden}
+body{margin:0;font-family:var(--fb);color:var(--ink);background:var(--paper);line-height:1.65;font-size:16px}
+img{max-width:100%;display:block}
+a{color:var(--a)}
+h1,h2,h3{font-family:var(--fd);color:var(--p);line-height:1.2;margin:0 0 .5em}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.eyebrow{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+.eyebrow::after{content:"";display:block;width:34px;height:3px;background:var(--a);margin-top:6px;border-radius:2px}
+section.blk{padding:72px 0;border-top:1px solid var(--line)}
+section.blk:first-of-type{border-top:none}
+section.blk h2{font-size:clamp(26px,4vw,34px)}
+section.alt{background:linear-gradient(180deg,var(--soft),color-mix(in srgb,var(--p) 5%,var(--soft)));position:relative}
+section.alt::before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--a) 16%,transparent),transparent 70%);top:-120px;right:-100px;pointer-events:none}
+.glass{background:rgba(255,255,255,.55);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(255,255,255,.65);box-shadow:0 8px 32px -16px rgba(20,33,61,.22)}
+
+nav.top{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid rgba(255,255,255,.12);box-shadow:none;transition:background .35s ease,border-color .35s ease,box-shadow .35s ease}
+nav.top.scrolled{background:color-mix(in srgb,var(--p) 72%,transparent);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.15);box-shadow:0 4px 24px -12px rgba(0,0,0,.35)}
+@supports not (background:color-mix(in srgb,red,blue)){nav.top.scrolled{background:rgba(20,33,61,.82)}}
+nav.top .wrap{display:flex;align-items:center;gap:14px;padding-top:10px;padding-bottom:10px}
+nav.top img.lg{height:40px;width:auto;border-radius:9px}
+nav.top .nm{font-family:var(--fd);font-weight:800;color:#fff;font-size:16.5px;white-space:nowrap;transition:color .35s ease}
+nav.top .lnks{margin-left:auto;display:flex;align-items:center}
+nav.top .lnks a{color:#fff;text-decoration:none;font-size:14px;font-weight:600;transition:color .35s ease}
+nav.top .lnks a:hover{color:var(--a)}
+.langs{display:flex;gap:2px;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:2px;transition:border-color .35s ease}
+.langs button{border:none;background:transparent;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;cursor:pointer;color:rgba(255,255,255,.78);font-family:var(--fb);transition:color .35s ease}
+.langs button.on{background:#fff;color:var(--p)}
+
+.hero{position:relative;background:var(--p);color:#fff;overflow:hidden;margin-top:-60px}
+.hero .bg{position:absolute;inset:-18% 0;background-size:cover;background-position:center;opacity:.42;will-change:transform}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(115deg,var(--p) 22%,color-mix(in srgb,var(--p) 55%,transparent) 60%,transparent 95%)}
+.hero .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;will-change:transform;pointer-events:none}
+.hero .orb.a{width:420px;height:420px;background:var(--a);top:-140px;right:-110px}
+.hero .orb.b{width:300px;height:300px;background:#fff;opacity:.14;bottom:-120px;left:22%}
+.hero .wrap{position:relative;padding-top:180px;padding-bottom:120px}
+.hero .kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:999px;padding:6px 16px;font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.hero .kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a)}
+.hero h1{color:#fff;font-size:clamp(32px,6vw,56px);max-width:17ch;letter-spacing:-.015em;text-wrap:balance}
+.hero .bar{width:64px;height:5px;background:var(--a);border-radius:3px;margin:18px 0}
+.hero p{max-width:56ch;font-size:clamp(16px,2vw,18.5px);opacity:.92}
+.hero .cta{display:inline-block;margin-top:26px;background:var(--a);color:#fff;text-decoration:none;font-weight:800;padding:13px 28px;border-radius:12px;box-shadow:0 10px 30px -10px var(--a);transition:transform .15s ease,box-shadow .15s ease}
+.hero .cta:hover{transform:translateY(-2px);box-shadow:0 16px 36px -10px var(--a)}
+
+.slides{position:relative;border-radius:14px;overflow:hidden;background:var(--soft);aspect-ratio:16/8}
+.slides .sl{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+.slides .sl.on{opacity:1}
+.slides .sl img{width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 6s ease-out}
+.slides .sl.on img{transform:scale(1)}
+.slides .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:linear-gradient(transparent,rgba(20,25,40,.75));color:#fff;font-size:14px;font-weight:600}
+.slides .dots{position:absolute;bottom:12px;right:16px;display:flex;gap:6px}
+.slides .dots button{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.5);cursor:pointer;padding:0}
+.slides .dots button.on{background:#fff}
+.slides .arr{position:absolute;top:50%;transform:translateY(-50%);border:none;background:rgba(255,255,255,.85);color:var(--p);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;font-weight:800}
+.slides .arr.l{left:12px}.slides .arr.r{right:12px}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.prose p{margin:0 0 1em;color:var(--ink)}
+.vm-card{background:rgba(255,255,255,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.7);border-left:5px solid var(--a);border-radius:14px;padding:22px 24px;box-shadow:0 10px 34px -18px rgba(20,33,61,.25)}
+.vm-card h3{font-size:19px}
+.vm-card ol{margin:0;padding-left:20px}
+.vm-card li{margin-bottom:8px}
+
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px}
+.person{background:rgba(255,255,255,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:14px;overflow:hidden;text-align:center;box-shadow:0 8px 26px -16px rgba(20,33,61,.2);transition:transform .18s ease,box-shadow .18s ease}
+.person:hover{transform:translateY(-4px);box-shadow:0 16px 34px -16px rgba(20,33,61,.32)}
+.person .ph{aspect-ratio:1/1;background:var(--soft);display:grid;place-items:center;color:var(--muted);font-family:var(--fd);font-weight:800;font-size:34px}
+.person .ph img{width:100%;height:100%;object-fit:cover}
+.person .in{padding:12px 10px 14px}
+.person .in b{display:block;color:var(--p);font-size:14.5px}
+.person .in span{font-size:12.5px;color:var(--a);font-weight:700}
+
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.75);border-radius:999px;padding:10px 20px;text-decoration:none;color:var(--p);font-weight:700;font-size:14.5px;box-shadow:0 6px 20px -12px rgba(20,33,61,.25);transition:transform .15s ease,color .15s}
+.chip:hover{transform:translateY(-2px);color:var(--a)}
+.chip .ic{width:9px;height:9px;border-radius:50%;background:var(--a)}
+.linklist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.linkcard{background:rgba(255,255,255,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.75);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--p);font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:center;box-shadow:0 6px 20px -12px rgba(20,33,61,.2);transition:transform .15s ease}
+.linkcard:hover{transform:translateY(-2px);color:var(--a)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.inview{opacity:1;transform:none}
+.linkcard span{color:var(--a)}
+
+footer.site{background:var(--p);color:#fff;margin-top:40px}
+footer.site .wrap{padding:46px 22px 30px;display:grid;grid-template-columns:1.4fr 1fr;gap:30px}
+@media(max-width:760px){footer.site .wrap{grid-template-columns:1fr}}
+footer.site img.lg{height:52px;width:auto;margin-bottom:12px;border-radius:11px}
+footer.site p{font-size:14px;opacity:.85;max-width:48ch}
+footer.site h4{margin:0 0 10px;font-family:var(--fd)}
+footer.site a{color:#fff;opacity:.9;text-decoration:none;font-size:14px}
+footer.site a:hover{color:#fff;opacity:1;text-decoration:underline}
+footer.site ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+footer.site .base{border-top:1px solid rgba(255,255,255,.18);padding:14px 22px;font-size:12.5px;opacity:.75;text-align:center}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.slides .sl{transition:none}.slides .sl img{transform:none;transition:none}.rv{opacity:1;transform:none;transition:none}.hero .bg,.hero .orb{transform:none!important}}
+</script>
+
+  <script type="text/plain" id="tpl-runtime">
+(function(){
+var FONTS={
+ jakarta:{css:"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap",d:"'Plus Jakarta Sans',sans-serif",b:"'Plus Jakarta Sans',sans-serif"},
+ inter:{css:"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap",d:"'Inter',sans-serif",b:"'Inter',sans-serif"},
+ poppins:{css:"https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap",d:"'Poppins',sans-serif",b:"'Poppins',sans-serif"},
+ serif:{css:"https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;600&display=swap",d:"'Source Serif 4',serif",b:"'Inter',sans-serif"},
+ grotesk:{css:"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap",d:"'Space Grotesk',sans-serif",b:"'Inter',sans-serif"}
+};
+var L={
+ slideshow:{id:"Galeri",en:"Gallery",de:"Galerie"},
+ about:{id:"Tentang Kami",en:"About Us",de:"Über uns"},
+ history:{id:"Sejarah",en:"History",de:"Geschichte"},
+ visimisi:{id:"Visi & Misi",en:"Vision & Mission",de:"Vision & Mission"},
+ pengurus:{id:"Pengurus",en:"Board",de:"Vorstand"},
+ sosmed:{id:"Sosial Media & Komunitas",en:"Social Media & Community",de:"Social Media & Community"},
+ links:{id:"Link Lainnya",en:"More Links",de:"Weitere Links"},
+ visi:{id:"Visi",en:"Vision",de:"Vision"},
+ misi:{id:"Misi",en:"Mission",de:"Mission"},
+ partof:{id:"adalah bagian dari PPI Jerman dan bukan badan hukum tersendiri.",en:"is part of PPI Jerman and not an independent legal entity.",de:"ist eine Untergliederung der PPI Jerman und keine eigenständige juristische Person."},
+ impint:{id:"Tautan Penting",en:"Important Links",de:"Wichtige Links"},
+ contact:{id:"Kontak",en:"Contact",de:"Kontakt"},
+ rights:{id:"Hak cipta dilindungi.",en:"All rights reserved.",de:"Alle Rechte vorbehalten."},
+ more:{id:"Selengkapnya",en:"Learn more",de:"Mehr erfahren"}
+};
+var S=null,lang="id";
+function t(o){if(o==null)return"";if(typeof o==="string")return o;return o[lang]||o.id||o.en||o.de||"";}
+function tl(k){return (L[k]&&(L[k][lang]||L[k].id))||k;}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function paras(txt){return t(txt).split(/\n\s*\n?/).filter(Boolean).map(function(p){return "<p>"+esc(p)+"</p>";}).join("");}
+function initials(n){return esc((n||"?").trim().split(/\s+/).slice(0,2).map(function(w){return w[0]||"";}).join("").toUpperCase());}
+
+function render(){
+ var th=S.theme||{};
+ var f=FONTS[th.font]||FONTS.jakarta;
+ var lk=document.getElementById("gfont");
+ if(!lk){lk=document.createElement("link");lk.id="gfont";lk.rel="stylesheet";document.head.appendChild(lk);}
+ if(lk.href!==f.css)lk.href=f.css;
+ var r=document.documentElement.style;
+ r.setProperty("--p",th.primary||"#14213D");r.setProperty("--a",th.accent||"#C1272D");
+ r.setProperty("--fd",f.d);r.setProperty("--fb",f.b);
+ document.title=S.name+" — "+t(S.tagline).slice(0,60);
+
+ var langs=["id"].concat((S.languages||[]).filter(function(x){return x!=="id";}));
+ if(langs.indexOf(lang)<0)lang="id";
+ var order=[];
+ if(S.enabled&&S.enabled.hero)order.push("hero");
+ (S.order||[]).forEach(function(k){if(k!=="hero"&&S.enabled&&S.enabled[k])order.push(k);});
+ var langBtns=langs.length>1?'<div class="langs">'+langs.map(function(l){
+   return '<button type="button" data-l="'+l+'" class="'+(l===lang?"on":"")+'">'+l.toUpperCase()+"</button>";}).join("")+"</div>":"";
+
+ var h="";
+ h+='<nav class="top"><div class="wrap">';
+ h+=S.logo?'<img class="lg" src="'+esc(S.logo)+'" alt="Logo '+esc(S.name)+'">':"";
+ h+='<span class="nm">'+esc(S.name)+"</span>";
+ if(langBtns)h+='<div class="lnks" style="display:flex">'+langBtns+"</div>";
+ h+="</div></nav>";
+
+ var alt=false;
+ order.forEach(function(k){
+  if(k==="hero"){
+   var hr=S.hero||{};
+   h+='<header class="hero">'+(hr.image?'<div class="bg" data-px="0.3" style="background-image:url(\''+esc(hr.image)+'\')"></div>':"")+'<div class="shade"></div><div class="orb a" data-px="-0.12"></div><div class="orb b" data-px="0.18"></div><div class="wrap">';
+   h+='<span class="kicker">'+esc(S.city?("PPI · "+S.city):"PPI")+"</span>";
+   h+="<h1>"+esc(t(hr.title)||S.name)+'</h1><div class="bar"></div>';
+   h+="<p>"+esc(t(hr.subtitle)||t(S.tagline))+"</p>";
+   var first=order.filter(function(x){return x!=="hero";})[0];
+   if(first)h+='<a class="cta" href="#'+first+'">'+esc(tl("more"))+"</a>";
+   h+="</div></header>";return;
+  }
+  var open='<section class="blk'+(alt?" alt":"")+'" id="'+k+'"><div class="wrap rv">';alt=!alt;
+  var head='<span class="eyebrow">'+esc(S.name)+"</span><h2>"+esc(tl(k))+"</h2>";
+  if(k==="slideshow"){
+   var ims=(S.slideshow&&S.slideshow.images||[]).filter(function(i){return i&&i.src;});
+   if(!ims.length)return;
+   h+=open+head+'<div class="slides" id="slides">';
+   ims.forEach(function(im,i){h+='<div class="sl'+(i===0?" on":"")+'"><img src="'+esc(im.src)+'" alt="'+esc(t(im.caption))+'" loading="lazy">'+(t(im.caption)?'<div class="cap">'+esc(t(im.caption))+"</div>":"")+"</div>";});
+   if(ims.length>1){
+    h+='<button class="arr l" type="button" data-sd="-1" aria-label="Sebelumnya">‹</button><button class="arr r" type="button" data-sd="1" aria-label="Berikutnya">›</button><div class="dots">';
+    ims.forEach(function(_,i){h+='<button type="button" data-si="'+i+'"'+(i===0?' class="on"':"")+' aria-label="Slide '+(i+1)+'"></button>';});
+    h+="</div>";}
+   h+="</div></div></section>";return;
+  }
+  if(k==="about"){h+=open+head+'<div class="prose">'+paras(S.about&&S.about.text)+"</div></div></section>";return;}
+  if(k==="history"){h+=open+head+'<div class="prose">'+paras(S.history&&S.history.text)+"</div></div></section>";return;}
+  if(k==="visimisi"){
+   var vm=S.visimisi||{};
+   h+=open+head+'<div class="two"><div class="vm-card"><h3>'+esc(tl("visi"))+"</h3><div class='prose'>"+paras(vm.visi)+'</div></div><div class="vm-card"><h3>'+esc(tl("misi"))+"</h3><ol>";
+   (vm.misi||[]).forEach(function(m){var s=t(m.text||m);if(s)h+="<li>"+esc(s)+"</li>";});
+   h+="</ol></div></div></div></section>";return;
+  }
+  if(k==="pengurus"){
+   h+=open+head+'<div class="people">';
+   (S.pengurus&&S.pengurus.members||[]).forEach(function(m){
+    h+='<div class="person"><div class="ph">'+(m.photo?'<img src="'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy">':initials(m.name))+'</div><div class="in"><b>'+esc(m.name)+"</b><span>"+esc(t(m.role))+"</span></div></div>";});
+   h+="</div></div></section>";return;
+  }
+  if(k==="sosmed"){
+   h+=open+head+'<div class="chips">';
+   (S.sosmed&&S.sosmed.items||[]).forEach(function(it){if(it.url)h+='<a class="chip" href="'+esc(it.url)+'" target="_blank" rel="noopener"><span class="ic"></span>'+esc(it.label)+"</a>";});
+   h+="</div></div></section>";return;
+  }
+  if(k==="links"){
+   h+=open+head+'<div class="linklist">';
+   (S.links&&S.links.items||[]).forEach(function(it){if(it.url)h+='<a class="linkcard" href="'+esc(it.url)+'" target="_blank" rel="noopener">'+esc(t(it.label))+"<span>→</span></a>";});
+   h+="</div></div></section>";return;
+  }
+ });
+
+ h+='<footer class="site"><div class="wrap"><div>';
+ h+=S.logo?'<img class="lg" src="'+esc(S.logo)+'" alt="">':"";
+ h+="<p><b>"+esc(S.name)+"</b> "+esc(tl("partof"))+"</p></div><div><h4>"+esc(tl("impint"))+"</h4><ul>";
+ if(S.showImpressum!==false)h+='<li><a href="impressum.html">Impressum</a></li>';
+ h+='</ul>';
+ if(S.email)h+="<h4 style='margin-top:16px'>"+esc(tl("contact"))+'</h4><a href="mailto:'+esc(S.email)+'">'+esc(S.email)+"</a>";
+ h+='</div></div><div class="base">© '+(new Date().getFullYear())+" "+esc(S.name)+". "+esc(tl("rights"))+"</div></footer>";
+
+ document.getElementById("app").innerHTML=h;
+ wireSlides();wireMotion();
+ document.querySelectorAll(".langs button").forEach(function(b){b.addEventListener("click",function(){lang=b.dataset.l;render();});});
+}
+var slTimer=null;
+function wireSlides(){
+ var box=document.getElementById("slides");if(!box)return;
+ var sls=box.querySelectorAll(".sl"),dots=box.querySelectorAll(".dots button"),i=0;
+ function go(n){i=(n+sls.length)%sls.length;sls.forEach(function(s,j){s.classList.toggle("on",j===i);});dots.forEach(function(d,j){d.classList.toggle("on",j===i);});}
+ box.querySelectorAll("[data-sd]").forEach(function(b){b.addEventListener("click",function(){go(i+parseInt(b.dataset.sd,10));});});
+ dots.forEach(function(d){d.addEventListener("click",function(){go(parseInt(d.dataset.si,10));});});
+ if(slTimer)clearInterval(slTimer);
+ if(sls.length>1&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches)slTimer=setInterval(function(){go(i+1);},5500);
+}
+var pxHandler=null,navHandler=null;
+function wireMotion(){
+ var nav=document.querySelector("nav.top"),hero=document.querySelector(".hero");
+ if(navHandler){window.removeEventListener("scroll",navHandler);navHandler=null;}
+ if(nav){
+  navHandler=function(){
+   if(hero){var lim=Math.max(40,hero.offsetHeight-70);nav.classList.toggle("scrolled",(window.scrollY||0)>=lim);}
+   else nav.classList.add("scrolled");
+  };
+  window.addEventListener("scroll",navHandler,{passive:true});
+  navHandler();
+ }
+ var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ var rvs=document.querySelectorAll(".rv");
+ if(reduce||!("IntersectionObserver" in window)){rvs.forEach(function(e){e.classList.add("inview");});}
+ else{
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("inview");io.unobserve(x.target);}});},{threshold:.12});
+  rvs.forEach(function(e){io.observe(e);});
+ }
+ if(pxHandler){window.removeEventListener("scroll",pxHandler);pxHandler=null;}
+ var pxEls=document.querySelectorAll("[data-px]");
+ if(reduce||!pxEls.length)return;
+ var tick=false;
+ pxHandler=function(){
+  if(tick)return;tick=true;
+  requestAnimationFrame(function(){
+   var y=window.scrollY||0;
+   pxEls.forEach(function(el){el.style.transform="translate3d(0,"+(y*parseFloat(el.dataset.px)).toFixed(1)+"px,0)";});
+   tick=false;
+  });
+ };
+ window.addEventListener("scroll",pxHandler,{passive:true});
+ pxHandler();
+}
+function boot(d){S=d;lang=(S.languages&&S.languages[0])||"id";lang="id";render();}
+if(window.SITE_INLINE){boot(window.SITE_INLINE);}
+else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.json();}).then(boot).catch(function(){boot(window.SITE_FALLBACK||{});});}
+})();
+</script>
+  <script>
+    /* ================= state ================= */
+    var SECTIONS = [
+      ["hero", "Hero Banner"], ["slideshow", "Slideshow Gambar Besar"], ["about", "Tentang Kami"],
+      ["history", "Sejarah"], ["visimisi", "Visi Misi"], ["pengurus", "Pengurus"],
+      ["sosmed", "Sosial Media & Komunitas"], ["links", "Link Lainnya"]
+    ];
+    var THEMES = [
+      { n: "Klasik", p: "#14213D", a: "#C1272D" },
+      { n: "Merah Putih", p: "#7A1113", a: "#B91C1C" },
+      { n: "Laut", p: "#0F3D5C", a: "#0E7490" },
+      { n: "Hutan", p: "#1C3A2A", a: "#2F855A" },
+      { n: "Senja", p: "#3B2352", a: "#C05621" },
+      { n: "Arang", p: "#1F2329", a: "#C1272D" }
+    ];
+    function defaultCfg() {
+      return {
+        name: "PPI Cabang Contoh", city: "Musterstadt", email: "",
+        languages: ["id"],
+        theme: { primary: "#14213D", accent: "#C1272D", font: "jakarta" },
+        order: SECTIONS.filter(function (s) { return s[0] !== "hero"; }).map(function (s) { return s[0]; }),
+        includeImpressum: true, includeAdmin: true,
+        enabled: { hero: true, slideshow: true, about: true, history: false, visimisi: true, pengurus: true, sosmed: true, links: false },
+        hero: { image: "", imageFile: null, title: { id: "", en: "", de: "" }, subtitle: { id: "", en: "", de: "" } },
+        slideshow: { images: [{ src: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=70", file: null, caption: { id: "Kegiatan bersama anggota", en: "", de: "" } }] },
+        about: { text: { id: "Kami adalah Perhimpunan Pelajar Indonesia yang menghimpun pelajar Indonesia di kota kami. Bersama PPI Jerman, kami mendukung dan mengadvokasi pelajar Indonesia yang sedang menempuh studi di Jerman.", en: "", de: "" } },
+        history: { text: { id: "", en: "", de: "" } },
+        visimisi: { visi: { id: "Menjadi wadah pemersatu pelajar Indonesia yang aktif, solid, dan bermanfaat.", en: "", de: "" }, misi: [{ text: { id: "Mempererat silaturahmi antarpelajar Indonesia.", en: "", de: "" } }, { text: { id: "Membantu pelajar baru beradaptasi di Jerman.", en: "", de: "" } }] },
+        pengurus: { members: [{ name: "Nama Ketua", role: { id: "Ketua", en: "Chairperson", de: "Vorsitz" }, photo: "", file: null }] },
+        sosmed: { items: [{ label: "Instagram", url: "" }] },
+        links: { items: [{ label: { id: "", en: "", de: "" }, url: "" }] },
+        impressum: { contactName: "", contactEmail: "", address: "" },
+        decap: { repo: "", branch: "main", oauthBase: "" },
+        assets: { logo: null, fav: null } /* {data:dataURL, ext:"png"} */
+      };
+    }
+    var cfg;
+    try { cfg = Object.assign(defaultCfg(), JSON.parse(localStorage.getItem("ppiGenCfg") || "null") || {}); } catch (e) { cfg = defaultCfg(); }
+    cfg.order = (cfg.order || []).filter(function (k) { return k !== "hero"; });
+    SECTIONS.forEach(function (s) { if (s[0] !== "hero" && cfg.order.indexOf(s[0]) < 0) cfg.order.push(s[0]); });
+    if (cfg.includeImpressum == null) cfg.includeImpressum = true;
+    if (cfg.includeAdmin == null) cfg.includeAdmin = true;
+    var activeLang = "id";
+
+    function save() { try { localStorage.setItem("ppiGenCfg", JSON.stringify(cfg)); } catch (e) { console.warn("Storage limits possibly exceeded", e); } }
+    function get(o, path) { return path.split(".").reduce(function (a, k) { return a && a[k]; }, o); }
+    function set(o, path, v) { var ks = path.split("."), last = ks.pop(), t = ks.reduce(function (a, k) { if (a[k] == null) a[k] = {}; return a[k]; }, o); t[last] = v; }
+    function toast(m) { var t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 2600); }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+    /* ================= sections list ================= */
+    function renderSections() {
+      var pin = document.getElementById("heroPin"); pin.innerHTML = "";
+      var hd = document.createElement("div"); hd.className = "sec-item" + (cfg.enabled.hero ? "" : " off");
+      hd.innerHTML = '<input type="checkbox" ' + (cfg.enabled.hero ? "checked" : "") + ' aria-label="Tampilkan Hero Banner"><span class="nm">Hero Banner</span><span style="font-size:11px;color:var(--muted);font-weight:600">📌 selalu di atas</span>';
+      hd.querySelector("input").addEventListener("change", function (e) { cfg.enabled.hero = e.target.checked; refresh(); });
+      pin.appendChild(hd);
+      var box = document.getElementById("sectionList"); box.innerHTML = "";
+      cfg.order.forEach(function (key, i) {
+        var name = (SECTIONS.find(function (s) { return s[0] === key; }) || [key, key])[1];
+        var d = document.createElement("div"); d.className = "sec-item" + (cfg.enabled[key] ? "" : " off");
+        d.innerHTML = '<input type="checkbox" ' + (cfg.enabled[key] ? "checked" : "") + ' aria-label="Tampilkan ' + esc(name) + '">' +
+          '<span class="nm">' + esc(name) + '</span><div class="mv">' +
+          '<button type="button" aria-label="Naik" ' + (i === 0 ? "disabled" : "") + '>▲</button>' +
+          '<button type="button" aria-label="Turun" ' + (i === cfg.order.length - 1 ? "disabled" : "") + '>▼</button></div>';
+        d.querySelector("input").addEventListener("change", function (e) { cfg.enabled[key] = e.target.checked; refresh(); });
+        var btns = d.querySelectorAll(".mv button");
+        btns[0].addEventListener("click", function () { cfg.order.splice(i - 1, 0, cfg.order.splice(i, 1)[0]); refresh(); });
+        btns[1].addEventListener("click", function () { cfg.order.splice(i + 1, 0, cfg.order.splice(i, 1)[0]); refresh(); });
+        box.appendChild(d);
+      });
+    }
+
+    /* ================= content forms ================= */
+    function mlInput(path, label, area) {
+      var html = '<label>' + esc(label) + ' <span style="color:var(--muted);font-weight:400">(' + activeLang.toUpperCase() + ')</span></label>';
+      var v = get(cfg, path + "." + activeLang) || "";
+      if (area) html += '<textarea data-ml="' + path + '">' + esc(v) + "</textarea>";
+      else html += '<input data-ml="' + path + '" value="' + esc(v) + '">';
+      return html;
+    }
+    function renderContent() {
+      var b = "";
+      b += "<h4 style='margin:14px 0 2px;color:var(--red)'>Hero Banner</h4>";
+      var hasH = !!cfg.hero.imageFile;
+      var isHUrl = !hasH && !!cfg.hero.image;
+      var hImgSrc = hasH ? cfg.hero.imageFile.data : (isHUrl ? cfg.hero.image : '');
+      b += '<label>Gambar latar hero</label><div class="file-drop"><img style="display:' + (hImgSrc ? 'block' : 'none') + '" src="' + hImgSrc + '"><div class="fi">' + (hasH ? 'File tersimpan' : (isHUrl ? 'Gambar bawaan (URL)' : 'Pilih gambar...')) + '</div><button class="btn btn-outline btn-sm" type="button" onclick="document.getElementById(\'f_hero\').click()">Pilih file</button><input type="file" id="f_hero" accept="image/jpeg,image/png,image/webp" style="display:none"></div>';
+      b += mlInput("hero.title", "Judul hero");
+      b += mlInput("hero.subtitle", "Subjudul hero", true);
+      b += "<div class='hint'>Kosongkan judul untuk memakai nama cabang, subjudul memakai tagline.</div>";
+      b += mlInput("tagline", "Tagline cabang", true);
+
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Slideshow</h4><div id='ls_slides'></div>";
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Tentang Kami</h4>" + mlInput("about.text", "Teks Tentang Kami", true);
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Sejarah</h4>" + mlInput("history.text", "Teks Sejarah", true);
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Visi Misi</h4>" + mlInput("visimisi.visi", "Visi", true) + "<label>Misi</label><div id='ls_misi'></div>";
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Pengurus</h4><div id='ls_members'></div>";
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Sosial Media & Komunitas</h4><div id='ls_sosmed'></div>";
+      b += "<h4 style='margin:18px 0 2px;color:var(--red)'>Link Lainnya</h4><div id='ls_links'></div>";
+      if (!cfg.tagline) cfg.tagline = { id: "Perhimpunan Pelajar Indonesia di " + (cfg.city || "kota kami"), en: "", de: "" };
+      document.getElementById("contentForms").innerHTML = b;
+      renderList("ls_slides", cfg.slideshow.images, function (it, i) {
+        var hasF = !!it.file;
+        var isUrl = !hasF && !!it.src;
+        var imgSrc = hasF ? it.file.data : (isUrl ? it.src : '');
+        return '<label>Gambar ' + (i + 1) + '</label>' +
+          '<div class="file-drop" style="margin-bottom:8px"><img style="display:' + (imgSrc ? 'block' : 'none') + '" src="' + imgSrc + '"><div class="fi">' + (hasF ? 'File tersimpan' : (isUrl ? 'Gambar bawaan (URL)' : 'Pilih gambar...')) + '</div><button class="btn btn-outline btn-sm" type="button" onclick="this.nextElementSibling.click()">Pilih file</button><input type="file" accept="image/jpeg,image/png,image/webp" style="display:none" data-slidefile="' + i + '"></div>' +
+          '<label>Keterangan (' + activeLang.toUpperCase() + ')</label><input data-li="caption.' + activeLang + '" value="' + esc(get(it, "caption." + activeLang) || "") + '">';
+      }, function () { return { src: "", file: null, caption: { id: "", en: "", de: "" } }; }, "Tambah gambar");
+      renderList("ls_misi", cfg.visimisi.misi, function (it, i) {
+        return '<label>Poin misi ' + (i + 1) + ' (' + activeLang.toUpperCase() + ')</label><input data-li="text.' + activeLang + '" value="' + esc(get(it, "text." + activeLang) || "") + '">';
+      }, function () { return { text: { id: "", en: "", de: "" } }; }, "Tambah poin misi");
+      renderList("ls_members", cfg.pengurus.members, function (it, i) {
+        var hasF = !!it.file;
+        var isUrl = !hasF && !!it.photo;
+        var imgSrc = hasF ? it.file.data : (isUrl ? it.photo : '');
+        return '<div class="row"><div><label>Nama</label><input data-li="name" value="' + esc(it.name) + '"></div>' +
+          '<div><label>Jabatan (' + activeLang.toUpperCase() + ')</label><input data-li="role.' + activeLang + '" value="' + esc(get(it, "role." + activeLang) || "") + '"></div></div>' +
+          '<label>Foto (opsional)</label>' +
+          '<div class="file-drop" style="margin-top:4px"><img style="display:' + (imgSrc ? 'block' : 'none') + '" src="' + imgSrc + '"><div class="fi">' + (hasF ? 'File tersimpan' : (isUrl ? 'Gambar bawaan (URL)' : 'Pilih foto...')) + '</div><button class="btn btn-outline btn-sm" type="button" onclick="this.nextElementSibling.click()">Pilih file</button><input type="file" accept="image/jpeg,image/png,image/webp" style="display:none" data-memberfile="' + i + '"></div>';
+      }, function () { return { name: "", role: { id: "", en: "", de: "" }, photo: "", file: null }; }, "Tambah pengurus");
+      renderList("ls_sosmed", cfg.sosmed.items, function (it) {
+        return '<div class="row"><div><label>Platform</label><input data-li="label" value="' + esc(it.label) + '" placeholder="Instagram"></div>' +
+          '<div><label>URL</label><input data-li="url" value="' + esc(it.url) + '" placeholder="https://instagram.com/..."></div></div>';
+      }, function () { return { label: "", url: "" }; }, "Tambah media sosial");
+      renderList("ls_links", cfg.links.items, function (it) {
+        return '<div class="row"><div><label>Nama link (' + activeLang.toUpperCase() + ')</label><input data-li="label.' + activeLang + '" value="' + esc(get(it, "label." + activeLang) || "") + '"></div>' +
+          '<div><label>URL</label><input data-li="url" value="' + esc(it.url) + '"></div></div>';
+      }, function () { return { label: { id: "", en: "", de: "" }, url: "" }; }, "Tambah link");
+      wireContentInputs();
+    }
+    function renderList(boxId, arr, rowFn, newFn, addLabel) {
+      var box = document.getElementById(boxId); box.innerHTML = "";
+      arr.forEach(function (it, i) {
+        var d = document.createElement("div"); d.className = "list-item";
+        d.innerHTML = rowFn(it, i) + '<button class="del" type="button" aria-label="Hapus">✕</button>';
+        d.querySelector(".del").addEventListener("click", function () { arr.splice(i, 1); renderContent(); refreshPreviewOnly(); });
+        d.querySelectorAll("[data-li]").forEach(function (inp) {
+          inp.addEventListener("input", function () { set(it, inp.dataset.li, inp.value); save(); schedulePreview(); });
+        });
+        box.appendChild(d);
+      });
+      var add = document.createElement("button"); add.className = "btn btn-outline btn-sm add-btn"; add.type = "button"; add.textContent = "+ " + addLabel;
+      add.addEventListener("click", function () { arr.push(newFn()); renderContent(); refreshPreviewOnly(); });
+      box.appendChild(add);
+    }
+    function wireContentInputs() {
+      document.querySelectorAll("[data-ml]").forEach(function (inp) {
+        inp.addEventListener("input", function () { set(cfg, inp.dataset.ml + "." + activeLang, inp.value); save(); schedulePreview(); });
+      });
+      document.querySelectorAll("[data-b]").forEach(function (inp) {
+        inp.addEventListener("input", function () { set(cfg, inp.dataset.b, inp.value); save(); schedulePreview(); });
+      });
+
+      var hf = document.getElementById("f_hero");
+      if (hf) {
+        hf.addEventListener("change", function (e) {
+          var f = e.target.files[0]; if (!f) return;
+          if (f.size > 2048 * 1024) { toast("Maksimal 2 MB."); return; }
+          var r = new FileReader();
+          r.onload = function () {
+            var ext = (f.name.split(".").pop() || "jpg").toLowerCase();
+            cfg.hero.imageFile = { data: r.result, ext: ext };
+            save(); renderContent(); schedulePreview();
+          };
+          r.readAsDataURL(f);
+        });
+      }
+      document.querySelectorAll("[data-slidefile]").forEach(function (inp) {
+        inp.addEventListener("change", function (e) {
+          var i = parseInt(inp.dataset.slidefile, 10);
+          var f = e.target.files[0]; if (!f) return;
+          if (f.size > 2048 * 1024) { toast("Maksimal 2 MB."); return; }
+          var r = new FileReader();
+          r.onload = function () {
+            var ext = (f.name.split(".").pop() || "jpg").toLowerCase();
+            cfg.slideshow.images[i].file = { data: r.result, ext: ext };
+            save(); renderContent(); schedulePreview();
+          };
+          r.readAsDataURL(f);
+        });
+      });
+      document.querySelectorAll("[data-memberfile]").forEach(function (inp) {
+        inp.addEventListener("change", function (e) {
+          var i = parseInt(inp.dataset.memberfile, 10);
+          var f = e.target.files[0]; if (!f) return;
+          if (f.size > 1024 * 1024) { toast("Maksimal 1 MB."); return; }
+          var r = new FileReader();
+          r.onload = function () {
+            var ext = (f.name.split(".").pop() || "jpg").toLowerCase();
+            cfg.pengurus.members[i].file = { data: r.result, ext: ext };
+            save(); renderContent(); schedulePreview();
+          };
+          r.readAsDataURL(f);
+        });
+      });
+    }
+
+    /* ================= theme ================= */
+    function renderThemes() {
+      var box = document.getElementById("themeSwatches"); box.innerHTML = "";
+      var list = cfg.logoTheme ? [{ n: "Dari Logo", p: cfg.logoTheme.p, a: cfg.logoTheme.a, star: true }].concat(THEMES) : THEMES;
+      list.forEach(function (t) {
+        var d = document.createElement("button"); d.type = "button";
+        d.className = "swatch" + (t.star ? " logo-sw" : "") + ((cfg.theme.primary === t.p && cfg.theme.accent === t.a) ? " on" : "");
+        d.innerHTML = '<div class="dots"><i style="background:' + t.p + '"></i><i style="background:' + t.a + '"></i></div><span>' + t.n + "</span>";
+        d.addEventListener("click", function () { cfg.theme.primary = t.p; cfg.theme.accent = t.a; syncThemeInputs(); renderThemes(); save(); schedulePreview(); });
+        box.appendChild(d);
+      });
+    }
+    function syncThemeInputs() {
+      document.getElementById("c_primary").value = cfg.theme.primary;
+      document.getElementById("c_accent").value = cfg.theme.accent;
+      document.getElementById("f_font").value = cfg.theme.font;
+    }
+
+    /* ================= logo color extraction ================= */
+    function extractLogoTheme(dataURL, cb) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var s = 72, c = document.createElement("canvas"); c.width = s; c.height = s;
+          var x = c.getContext("2d"); x.drawImage(img, 0, 0, s, s);
+          var d = x.getImageData(0, 0, s, s).data, buckets = {}, i;
+          for (i = 0; i < d.length; i += 4) {
+            var r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+            if (a < 120) continue;
+            var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 510;
+            if (l > 0.93 || l < 0.05) continue;                      /* abaikan putih/hitam pekat */
+            var sat = mx === mn ? 0 : (mx - mn) / (255 - Math.abs(mx + mn - 255));
+            var key = (r >> 5) + "_" + (g >> 5) + "_" + (b >> 5);
+            var bk = buckets[key] || (buckets[key] = { n: 0, r: 0, g: 0, b: 0, s: 0, l: 0 });
+            bk.n++; bk.r += r; bk.g += g; bk.b += b; bk.s += sat; bk.l += l;
+          }
+          var arr = Object.keys(buckets).map(function (k) {
+            var bk = buckets[k];
+            return { r: bk.r / bk.n, g: bk.g / bk.n, b: bk.b / bk.n, n: bk.n, s: bk.s / bk.n, l: bk.l / bk.n };
+          });
+          if (!arr.length) { cb(null); return; }
+          function hex(o) { return "#" + [o.r, o.g, o.b].map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }).join(""); }
+          function dist(a2, b2) { return Math.abs(a2.r - b2.r) + Math.abs(a2.g - b2.g) + Math.abs(a2.b - b2.b); }
+          /* aksen: warna paling hidup (banyak x saturasi²) */
+          var accent = arr.slice().sort(function (a2, b2) { return b2.n * b2.s * b2.s - a2.n * a2.s * a2.s; })[0];
+          if (accent.l > 0.7) accent = { r: accent.r * .72, g: accent.g * .72, b: accent.b * .72, l: accent.l * .72 }; /* pastikan teks putih terbaca */
+          /* utama: warna gelap dominan yang berbeda dari aksen; jika tak ada, gelapkan aksen */
+          var primary = arr.filter(function (o) { return o.l < 0.42 && o.n > 2 && dist(o, accent) > 90; })
+            .sort(function (a2, b2) { return b2.n - a2.n; })[0];
+          var pHex = primary ? hex(primary) : hex({ r: accent.r * .3, g: accent.g * .3, b: accent.b * .38 });
+          cb({ p: pHex, a: hex(accent) });
+        } catch (e) { cb(null); }
+      };
+      img.onerror = function () { cb(null); };
+      img.src = dataURL;
+    }
+
+    /* ================= files ================= */
+    function wireFile(inputId, key, prevId, infoId) {
+      document.getElementById(inputId).addEventListener("change", function (e) {
+        var f = e.target.files[0]; if (!f) return;
+        if (f.size > 1024 * 1024) { toast("Ukuran file maksimal 1 MB."); return; }
+        var r = new FileReader();
+        r.onload = function () {
+          var ext = (f.name.split(".").pop() || "png").toLowerCase();
+          cfg.assets[key] = { data: r.result, ext: ext === "svg" ? "svg" : (ext === "ico" ? "ico" : ext) };
+          document.getElementById(prevId).src = r.result;
+          document.getElementById(infoId).textContent = f.name + " (" + Math.round(f.size / 1024) + " KB)";
+          save(); schedulePreview();
+          if (key === "logo") {
+            extractLogoTheme(r.result, function (th) {
+              if (!th) return;
+              cfg.logoTheme = th;
+              cfg.theme.primary = th.p; cfg.theme.accent = th.a;
+              syncThemeInputs(); renderThemes(); save(); schedulePreview();
+              toast("Tema warna disarankan dari logo ★ — bisa diganti di bagian Tampilan.");
+            });
+          }
+        };
+        r.readAsDataURL(f);
+      });
+    }
+
+    /* ================= build site ================= */
+    function siteJSON(forPreview) {
+      var langs = ["id"];
+      if (document.getElementById("lang_en").checked) langs.push("en");
+      if (document.getElementById("lang_de").checked) langs.push("de");
+      cfg.languages = langs;
+      var logoPath = cfg.assets.logo ? (forPreview ? cfg.assets.logo.data : "assets/logo." + cfg.assets.logo.ext) : "";
+
+      var outHero = JSON.parse(JSON.stringify(cfg.hero));
+      if (cfg.hero.imageFile) {
+        outHero.image = forPreview ? cfg.hero.imageFile.data : "assets/uploads/hero." + cfg.hero.imageFile.ext;
+      }
+      delete outHero.imageFile;
+
+      var outSlideshow = JSON.parse(JSON.stringify(cfg.slideshow));
+      outSlideshow.images = (cfg.slideshow.images || []).map(function (im, i) {
+        var src = im.src;
+        if (cfg.slideshow.images[i].file) {
+          src = forPreview ? cfg.slideshow.images[i].file.data : "assets/uploads/slide_" + i + "." + cfg.slideshow.images[i].file.ext;
+        }
+        return { src: src, caption: im.caption };
+      });
+
+      var outPengurus = JSON.parse(JSON.stringify(cfg.pengurus));
+      outPengurus.members = (cfg.pengurus.members || []).map(function (m, i) {
+        var photo = m.photo;
+        if (cfg.pengurus.members[i].file) {
+          photo = forPreview ? cfg.pengurus.members[i].file.data : "assets/uploads/member_" + i + "." + cfg.pengurus.members[i].file.ext;
+        }
+        return { name: m.name, role: m.role, photo: photo };
+      });
+
+      return {
+        name: cfg.name, city: cfg.city, email: cfg.email, tagline: cfg.tagline,
+        languages: langs, theme: cfg.theme, logo: logoPath,
+        showImpressum: cfg.includeImpressum !== false,
+        order: cfg.order, enabled: cfg.enabled,
+        hero: outHero, slideshow: outSlideshow, about: cfg.about, history: cfg.history,
+        visimisi: cfg.visimisi, pengurus: outPengurus, sosmed: cfg.sosmed, links: cfg.links
+      };
+    }
+    function siteHTML(mode) { /* mode: "preview" | "zip" */
+      var css = document.getElementById("tpl-sitecss").textContent;
+      var run = document.getElementById("tpl-runtime").textContent;
+      var data = JSON.stringify(siteJSON(mode === "preview"));
+      var favTag = "";
+      if (mode === "zip") {
+        if (cfg.assets.fav) favTag = '<link rel="icon" href="assets/favicon.' + cfg.assets.fav.ext + '">';
+        else if (cfg.assets.logo) favTag = '<link rel="icon" href="assets/logo.' + cfg.assets.logo.ext + '">';
+      } else if (cfg.assets.fav || cfg.assets.logo) {
+        favTag = '<link rel="icon" href="' + (cfg.assets.fav || cfg.assets.logo).data + '">';
+      }
+      return '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+        "<title>" + esc(cfg.name) + "</title>\n" +
+        '<meta name="description" content="' + esc((cfg.tagline && cfg.tagline.id) || cfg.name) + '">\n' + favTag +
+        "\n<style>" + css + "</style>\n</head>\n<body>\n<div id='app'></div>\n" +
+        "<scr" + "ipt>window." + (mode === "preview" ? "SITE_INLINE" : "SITE_FALLBACK") + "=" + data + ";</scr" + "ipt>\n" +
+        "<scr" + "ipt>" + run + "</scr" + "ipt>\n</body>\n</html>";
+    }
+    function impressumHTML() {
+      var css = document.getElementById("tpl-sitecss").textContent;
+      var im = cfg.impressum || {};
+      var favTag = cfg.assets.fav ? '<link rel="icon" href="assets/favicon.' + cfg.assets.fav.ext + '">' : (cfg.assets.logo ? '<link rel="icon" href="assets/logo.' + cfg.assets.logo.ext + '">' : "");
+      var logo = cfg.assets.logo ? '<img class="lg" src="assets/logo.' + cfg.assets.logo.ext + '" alt="Logo">' : "";
+      return '<!DOCTYPE html>\n<html lang="de">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Impressum — ' + esc(cfg.name) + "</title>\n" + favTag +
+        '\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">\n<style>' + css +
+        '\n:root{--p:' + cfg.theme.primary + ";--a:" + cfg.theme.accent + "}</style>\n</head>\n<body>\n" +
+        '<nav class="top"><div class="wrap">' + logo + '<span class="nm">' + esc(cfg.name) + '</span><div class="lnks" style="display:flex"><a href="index.html">← Beranda / Startseite</a></div></div></nav>\n' +
+        '<section class="blk"><div class="wrap" style="max-width:800px">\n<span class="eyebrow">Impressum</span>\n<h2>Impressum / Angaben gemäß § 5 DDG</h2>\n' +
+        '<div class="vm-card" style="margin:18px 0"><h3>Hinweis / Keterangan</h3><p><b>' + esc(cfg.name) + '</b> ist eine unselbstständige Ortsgruppe (PPI Cabang) der <b>PPI Jerman</b> und keine eigenständige juristische Person. Rechtsträger ist der Verein <b>Die Vereinigung Indonesischer Studenten (V.I.S.) e.V.</b></p>' +
+        '<p style="margin-bottom:0"><i>' + esc(cfg.name) + ' adalah cabang dari PPI Jerman dan bukan badan hukum tersendiri. Badan hukum yang menaunginya adalah Die Vereinigung Indonesischer Studenten (V.I.S.) e.V.</i></p></div>\n' +
+        "<h3>Rechtsträger / Badan hukum</h3>\n<p>Die Vereinigung Indonesischer Studenten (V.I.S.) e.V. — PPI Jerman<br>Registernummer: VR2912<br>Sitz: München, Deutschland</p>\n" +
+        '<p>Es gilt das zentrale Impressum der PPI Jerman: <a href="https://ppijerman.org/imprint" target="_blank" rel="noopener">ppijerman.org/imprint</a></p>\n' +
+        "<h3>Ansprechpartner der Ortsgruppe / Penanggung jawab cabang</h3>\n<p>" +
+        (im.contactName ? esc(im.contactName) + "<br>" : "") +
+        (im.contactEmail ? 'E-Mail: <a href="mailto:' + esc(im.contactEmail) + '">' + esc(im.contactEmail) + "</a><br>" : "") +
+        (im.address ? esc(im.address).replace(/\n/g, "<br>") : "") +
+        ((!im.contactName && !im.contactEmail && !im.address) ? "Siehe zentrales Impressum der PPI Jerman." : "") + "</p>\n" +
+        "<h3>Haftung für Inhalte und Links</h3>\n<p>Für eigene Inhalte auf diesen Seiten sind wir nach den allgemeinen Gesetzen verantwortlich. Für die Inhalte externer Links sind ausschließlich deren Betreiber verantwortlich; zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Ergänzend gelten die Haftungs- und Urheberrechtshinweise im zentralen Impressum der PPI Jerman.</p>\n" +
+        '</div></section>\n<footer class="site"><div class="base">© ' + (new Date().getFullYear()) + " " + esc(cfg.name) + "</div></footer>\n</body>\n</html>";
+    }
+    function decapConfigYML() {
+      var d = cfg.decap || {};
+      var y = "backend:\n  name: github\n  repo: " + (d.repo || "OWNER/REPO") + "\n  branch: " + (d.branch || "main") + "\n";
+      if (d.oauthBase) y += "  base_url: " + d.oauthBase + "\n";
+      y += "\n# Untuk mencoba admin secara lokal tanpa GitHub, jalankan: npx decap-server\n# lalu buka situs lewat server lokal dan aktifkan baris berikut:\n# local_backend: true\n\n";
+      y += "media_folder: \"assets/uploads\"\npublic_folder: \"assets/uploads\"\n\n";
+      var ml = function (name, label, widget) { return "        - {label: " + label + ", name: " + name + ", widget: object, fields: [{label: ID, name: id, widget: " + widget + ", required: false}, {label: EN, name: en, widget: " + widget + ", required: false}, {label: DE, name: de, widget: " + widget + ", required: false}]}\n"; };
+      y += "collections:\n  - name: site\n    label: \"Konten Website\"\n    files:\n      - name: konten\n        label: \"Halaman Utama\"\n        file: \"content/site.json\"\n        format: json\n        fields:\n";
+      y += "        - {label: \"Nama Cabang\", name: name, widget: string}\n";
+      y += "        - {label: Kota, name: city, widget: string}\n";
+      y += "        - {label: Email, name: email, widget: string, required: false}\n";
+      y += ml("tagline", "Tagline", "text");
+      y += "        - {label: \"Bahasa aktif\", name: languages, widget: select, multiple: true, options: [id, en, de]}\n";
+      y += "        - label: Tema\n          name: theme\n          widget: object\n          fields:\n            - {label: \"Warna utama\", name: primary, widget: color}\n            - {label: \"Warna aksen\", name: accent, widget: color}\n            - {label: Font, name: font, widget: select, options: [jakarta, inter, poppins, serif, grotesk]}\n";
+      y += "        - {label: \"Path logo\", name: logo, widget: string, required: false, hint: \"mis. assets/logo.png — unggah lewat Media\"}\n";
+      y += "        - {label: \"Urutan bagian\", name: order, widget: list, field: {label: Bagian, name: section, widget: select, options: [slideshow, about, history, visimisi, pengurus, sosmed, links]}, hint: \"Hero Banner selalu paling atas\"}\n";
+      y += "        - label: \"Bagian aktif\"\n          name: enabled\n          widget: object\n          fields:\n";
+      SECTIONS.forEach(function (s) { y += "            - {label: \"" + s[1] + "\", name: " + s[0] + ", widget: boolean, required: false}\n"; });
+      y += "        - label: \"Hero Banner\"\n          name: hero\n          widget: object\n          fields:\n            - {label: \"URL gambar latar\", name: image, widget: string, required: false}\n" + ml("title", "Judul", "string").replace(/^ {8}/gm, "            ") + ml("subtitle", "Subjudul", "text").replace(/^ {8}/gm, "            ");
+      y += "        - label: Slideshow\n          name: slideshow\n          widget: object\n          fields:\n            - label: Gambar\n              name: images\n              widget: list\n              fields:\n                - {label: Gambar, name: src, widget: image}\n" + ml("caption", "Keterangan", "string").replace(/^ {8}/gm, "                ");
+      y += "        - label: \"Tentang Kami\"\n          name: about\n          widget: object\n          fields:\n" + ml("text", "Teks", "markdown").replace(/^ {8}/gm, "            ");
+      y += "        - label: Sejarah\n          name: history\n          widget: object\n          fields:\n" + ml("text", "Teks", "markdown").replace(/^ {8}/gm, "            ");
+      y += "        - label: \"Visi Misi\"\n          name: visimisi\n          widget: object\n          fields:\n" + ml("visi", "Visi", "text").replace(/^ {8}/gm, "            ") + "            - label: Misi\n              name: misi\n              widget: list\n              fields:\n" + ml("text", "Poin", "string").replace(/^ {8}/gm, "                ");
+      y += "        - label: Pengurus\n          name: pengurus\n          widget: object\n          fields:\n            - label: Anggota\n              name: members\n              widget: list\n              fields:\n                - {label: Nama, name: name, widget: string}\n" + ml("role", "Jabatan", "string").replace(/^ {8}/gm, "                ") + "                - {label: Foto, name: photo, widget: image, required: false}\n";
+      y += "        - label: \"Sosial Media\"\n          name: sosmed\n          widget: object\n          fields:\n            - label: Akun\n              name: items\n              widget: list\n              fields:\n                - {label: Platform, name: label, widget: string}\n                - {label: URL, name: url, widget: string}\n";
+      y += "        - label: \"Link Lainnya\"\n          name: links\n          widget: object\n          fields:\n            - label: Link\n              name: items\n              widget: list\n              fields:\n" + ml("label", "Nama", "string").replace(/^ {8}/gm, "                ") + "                - {label: URL, name: url, widget: string}\n";
+      return y;
+    }
+    function adminHTML() {
+      return '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Admin — ' + esc(cfg.name) + '</title>\n</head>\n<body>\n<scr' + 'ipt src="https://unpkg.com/decap-cms@^3.3.3/dist/decap-cms.js"></scr' + 'ipt>\n</body>\n</html>';
+    }
+    function readmeMD() {
+      var d = cfg.decap || {};
+      var s = "# Website " + cfg.name + "\n\nWebsite statis satu halaman, dibuat dengan Generator Website PPI Cabang. Konten diambil dari `content/site.json`" + (cfg.includeAdmin !== false ? " dan dapat diedit lewat halaman admin (Decap CMS) di `/admin`" : "") + ".\n\n" +
+        "## Struktur\n\n- `index.html` — halaman utama (membaca `content/site.json`)\n" +
+        (cfg.includeImpressum !== false ? "- `impressum.html` — Impressum\n" : "") +
+        "- `content/site.json` — semua konten & pengaturan\n" +
+        (cfg.includeAdmin !== false ? "- `admin/` — Decap CMS untuk pengurus\n" : "") +
+        "- `assets/` — logo, favicon" + (cfg.includeAdmin !== false ? ", dan unggahan media" : "") + "\n\n" +
+        "## Hosting\n\nUnggah seluruh isi ZIP ini ke platform hosting statis pilihan Anda (mis. server web, hosting statis, atau layanan lainnya). Tidak ada proses build yang diperlukan — cukup unggah file dan website siap diakses.\n\n";
+      if (cfg.includeAdmin !== false) {
+        s += "## Mengaktifkan halaman admin (`/admin`)\n\nDecap CMS membutuhkan backend Git dan OAuth untuk menyimpan perubahan. Sesuaikan `admin/config.yml` dengan platform hosting dan repositori yang Anda gunakan:\n\n1. Isi `repo` dan `branch` di `admin/config.yml` sesuai repositori Anda.\n2. Siapkan OAuth sesuai panduan Decap CMS untuk platform hosting Anda.\n3. Isi `base_url` di `admin/config.yml` dengan URL endpoint OAuth" + (d.oauthBase ? " (sudah terisi: `" + d.oauthBase + "`)" : "") + ".\n4. Buka halaman `/admin/` di situs Anda dan login untuk mulai mengedit konten.\n\n### Mencoba admin secara lokal\n\n```\nnpx serve .        # jalankan situs lokal\nnpx decap-server   # backend lokal\n```\nlalu aktifkan `local_backend: true` di `admin/config.yml` (hapus lagi sebelum production).\n\n";
+      }
+      s += "## Catatan hukum\n\nPastikan website organisasi Anda memenuhi kewajiban hukum yang berlaku, termasuk Impressum jika berlaku (§ 5 DDG).\n";
+      if (cfg.includeImpressum !== false) s += "Jangan hapus halaman `impressum.html` atau tautannya di footer.\n";
+      else s += "⚠️ Website ini dibuat TANPA halaman Impressum. Menurut § 5 DDG, website organisasi di Jerman umumnya wajib memiliki Impressum — pastikan kewajiban ini dipenuhi dengan cara lain.\n";
+      return s;
+    }
+
+    /* ================= preview ================= */
+    var pvTimer = null;
+    function schedulePreview() { clearTimeout(pvTimer); pvTimer = setTimeout(refreshPreviewOnly, 350); }
+    function refreshPreviewOnly() { document.getElementById("previewFrame").srcdoc = siteHTML("preview"); save(); }
+    function refresh() { renderSections(); renderContent(); renderThemes(); refreshPreviewOnly(); }
+
+    /* ================= download ================= */
+    function dataURLtoU8(d) { var b = atob(d.split(",")[1]), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++)u[i] = b.charCodeAt(i); return u; }
+    document.getElementById("btnDownload").addEventListener("click", function () {
+      var zip = new JSZip();
+      zip.file("index.html", siteHTML("zip"));
+      if (cfg.includeImpressum !== false) zip.file("impressum.html", impressumHTML());
+      zip.file("content/site.json", JSON.stringify(siteJSON(false), null, 2));
+      if (cfg.includeAdmin !== false) {
+        zip.file("admin/index.html", adminHTML());
+        zip.file("admin/config.yml", decapConfigYML());
+        zip.file("assets/uploads/.gitkeep", "");
+      }
+      zip.file("README.md", readmeMD());
+      if (cfg.assets.logo) zip.file("assets/logo." + cfg.assets.logo.ext, dataURLtoU8(cfg.assets.logo.data));
+      if (cfg.assets.fav) zip.file("assets/favicon." + cfg.assets.fav.ext, dataURLtoU8(cfg.assets.fav.data));
+
+      if (cfg.hero.imageFile) zip.file("assets/uploads/hero." + cfg.hero.imageFile.ext, dataURLtoU8(cfg.hero.imageFile.data));
+
+      (cfg.slideshow.images || []).forEach(function (im, i) {
+        if (im.file) zip.file("assets/uploads/slide_" + i + "." + im.file.ext, dataURLtoU8(im.file.data));
+      });
+
+      (cfg.pengurus.members || []).forEach(function (m, i) {
+        if (m.file) zip.file("assets/uploads/member_" + i + "." + m.file.ext, dataURLtoU8(m.file.data));
+      });
+
+      zip.generateAsync({ type: "blob" }).then(function (blob) {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = (cfg.name || "ppi-cabang").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-website.zip";
+        document.body.appendChild(a); a.click(); a.remove();
+        toast("ZIP berhasil dibuat!");
+      });
+    });
+
+    /* ================= wiring ================= */
+    document.querySelectorAll("[data-bind]").forEach(function (inp) {
+      var v = get(cfg, inp.dataset.bind); if (v != null) inp.value = v;
+      inp.addEventListener("input", function () { set(cfg, inp.dataset.bind, inp.value); save(); schedulePreview(); });
+    });
+    ["lang_en", "lang_de"].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.checked = cfg.languages.indexOf(el.dataset.lang) >= 0;
+      el.addEventListener("change", function () {
+        var tabs = document.getElementById("langTabs");
+        tabs.querySelector('[data-lt="' + el.dataset.lang + '"]').hidden = !el.checked;
+        if (!el.checked && activeLang === el.dataset.lang) { activeLang = "id"; setLangTab(); }
+        refreshPreviewOnly();
+      });
+      document.getElementById("langTabs").querySelector('[data-lt="' + el.dataset.lang + '"]').hidden = !el.checked;
+    });
+    function setLangTab() {
+      document.querySelectorAll("#langTabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.lt === activeLang); });
+      renderContent();
+    }
+    document.querySelectorAll("#langTabs button").forEach(function (b) {
+      b.addEventListener("click", function () { activeLang = b.dataset.lt; setLangTab(); });
+    });
+    // Impressum permission gate
+    (function() {
+      var permEl = document.getElementById("imp_permission");
+      var incEl = document.getElementById("inc_imp");
+      var fields = document.getElementById("imp_fields");
+      // Restore state: if permission was previously granted, unlock
+      if (cfg.impressumPermission) {
+        permEl.checked = true;
+        incEl.disabled = false;
+        incEl.checked = cfg.includeImpressum !== false;
+        fields.style.opacity = "1";
+        fields.style.pointerEvents = "auto";
+      } else {
+        incEl.checked = false;
+        cfg.includeImpressum = false;
+      }
+      permEl.addEventListener("change", function() {
+        cfg.impressumPermission = permEl.checked;
+        incEl.disabled = !permEl.checked;
+        if (!permEl.checked) { incEl.checked = false; cfg.includeImpressum = false; }
+        fields.style.opacity = permEl.checked ? "1" : "0.4";
+        fields.style.pointerEvents = permEl.checked ? "auto" : "none";
+        save(); schedulePreview();
+      });
+      incEl.addEventListener("change", function () { cfg.includeImpressum = incEl.checked; save(); schedulePreview(); });
+    })();
+    // Admin include toggle
+    (function() {
+      var el = document.getElementById("inc_adm");
+      el.checked = cfg.includeAdmin !== false;
+      el.addEventListener("change", function () { cfg.includeAdmin = el.checked; save(); schedulePreview(); });
+    })();
+    document.getElementById("c_primary").addEventListener("input", function (e) { cfg.theme.primary = e.target.value; renderThemes(); save(); schedulePreview(); });
+    document.getElementById("c_accent").addEventListener("input", function (e) { cfg.theme.accent = e.target.value; renderThemes(); save(); schedulePreview(); });
+    document.getElementById("f_font").addEventListener("change", function (e) { cfg.theme.font = e.target.value; save(); schedulePreview(); });
+    wireFile("f_logo", "logo", "logoPrev", "logoInfo");
+    wireFile("f_fav", "fav", "favPrev", "favInfo");
+    if (cfg.assets.logo) { document.getElementById("logoPrev").src = cfg.assets.logo.data; document.getElementById("logoInfo").textContent = "Logo tersimpan."; }
+    if (cfg.assets.fav) { document.getElementById("favPrev").src = cfg.assets.fav.data; document.getElementById("favInfo").textContent = "Favicon tersimpan."; }
+    document.getElementById("devDesk").addEventListener("click", function () { document.getElementById("previewWrap").classList.remove("mobile"); this.classList.add("on"); document.getElementById("devMob").classList.remove("on"); });
+    document.getElementById("devMob").addEventListener("click", function () { document.getElementById("previewWrap").classList.add("mobile"); this.classList.add("on"); document.getElementById("devDesk").classList.remove("on"); });
+    document.getElementById("btnResetCfg").addEventListener("click", function () {
+      if (confirm("Hapus semua isian dan kembali ke pengaturan awal?")) { localStorage.removeItem("ppiGenCfg"); location.reload(); }
+    });
+    syncThemeInputs();
+    refresh();
+  </script>
+</body>
+
+</html>
