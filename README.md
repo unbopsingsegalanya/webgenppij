@@ -39,7 +39,7 @@ Berkas ZIP yang dihasilkan berisi berkas mandiri dengan struktur berikut:
 Proyek ini dibangun menggunakan HTML, CSS dan JavaScript tanpa framework eksternal.
 
 
-## Penafian (Disclaimer)
+## Disclaimer
 
 Proyek ini dikembangkan secara **independen** dan **tidak memiliki hubungan afiliasi resmi** dengan **PPI Jerman (PPIJ)**. Seluruh tanggung jawab atas konten, hukum (termasuk kepatuhan Impressum), dan pengelolaan website hasil generator ini berada sepenuhnya pada masing-masing pengurus PPI Cabang yang menggunakannya.
 
