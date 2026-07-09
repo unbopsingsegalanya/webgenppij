@@ -720,6 +720,14 @@
         </div>
       </details>
 
+      <details class="acc">
+        <summary><span class="step">8</span> Kredit Pembuat <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <label class="check" style="margin-top:10px"><input type="checkbox" id="inc_credit"> Berikan kredit pembuat website</label>
+          <p class="hint">Menampilkan tautan kredit ke pembuat generator website (<code>webgenppij.pages.dev</code>) dan repositori kode sumber di footer website Anda.</p>
+        </div>
+      </details>
+
     </div>
 
     <div class="preview-col">
@@ -858,7 +866,9 @@ var L={
  impint:{id:"Tautan Penting",en:"Important Links",de:"Wichtige Links"},
  contact:{id:"Kontak",en:"Contact",de:"Kontakt"},
  rights:{id:"Hak cipta dilindungi.",en:"All rights reserved.",de:"Alle Rechte vorbehalten."},
- more:{id:"Selengkapnya",en:"Learn more",de:"Mehr erfahren"}
+ more:{id:"Selengkapnya",en:"Learn more",de:"Mehr erfahren"},
+ createdWith:{id:"Dibuat menggunakan",en:"Created with",de:"Erstellt mit"},
+ sourceCode:{id:"Kode Sumber",en:"Source Code",de:"Quellcode"}
 };
 var S=null,lang="id";
 function t(o){if(o==null)return"";if(typeof o==="string")return o;return o[lang]||o.id||o.en||o.de||"";}
@@ -950,7 +960,11 @@ function render(){
  if(S.showImpressum!==false)h+='<li><a href="impressum.html">Impressum</a></li>';
  h+='</ul>';
  if(S.email)h+="<h4 style='margin-top:16px'>"+esc(tl("contact"))+'</h4><a href="mailto:'+esc(S.email)+'">'+esc(S.email)+"</a>";
- h+='</div></div><div class="base">© '+(new Date().getFullYear())+" "+esc(S.name)+". "+esc(tl("rights"))+"</div></footer>";
+ var creditStr = "";
+ if(S.showCredit) {
+  creditStr = '<br><span style="opacity:0.8;font-size:11px">' + esc(tl("createdWith")) + ' <a href="https://webgenppij.pages.dev" target="_blank" rel="noopener" style="text-decoration:underline;color:inherit">webgenppij.pages.dev</a> · <a href="https://github.com/unbopsingsegalanya/webgenppij/" target="_blank" rel="noopener" style="text-decoration:underline;color:inherit">' + esc(tl("sourceCode")) + '</a></span>';
+ }
+ h+='</div></div><div class="base">© '+(new Date().getFullYear())+" "+esc(S.name)+". "+esc(tl("rights"))+creditStr+"</div></footer>";
 
  document.getElementById("app").innerHTML=h;
  wireSlides();wireMotion();
@@ -1027,6 +1041,7 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
         theme: { primary: "#14213D", accent: "#C1272D", font: "jakarta" },
         order: SECTIONS.filter(function (s) { return s[0] !== "hero"; }).map(function (s) { return s[0]; }),
         includeImpressum: true, includeAdmin: true,
+        includeCredit: false,
         enabled: { hero: true, slideshow: true, about: true, history: false, visimisi: true, pengurus: true, sosmed: true, links: false },
         hero: { image: "", imageFile: null, title: { id: "", en: "", de: "" }, subtitle: { id: "", en: "", de: "" } },
         slideshow: { images: [{ src: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=70", file: null, caption: { id: "Kegiatan bersama anggota", en: "", de: "" } }] },
@@ -1047,6 +1062,7 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
     SECTIONS.forEach(function (s) { if (s[0] !== "hero" && cfg.order.indexOf(s[0]) < 0) cfg.order.push(s[0]); });
     if (cfg.includeImpressum == null) cfg.includeImpressum = true;
     if (cfg.includeAdmin == null) cfg.includeAdmin = true;
+    if (cfg.includeCredit == null) cfg.includeCredit = false;
     var activeLang = "id";
 
     function save() { try { localStorage.setItem("ppiGenCfg", JSON.stringify(cfg)); } catch (e) { console.warn("Storage limits possibly exceeded", e); } }
@@ -1323,6 +1339,7 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
         name: cfg.name, city: cfg.city, email: cfg.email, tagline: cfg.tagline,
         languages: langs, theme: cfg.theme, logo: logoPath,
         showImpressum: cfg.includeImpressum !== false,
+        showCredit: cfg.includeCredit === true,
         order: cfg.order, enabled: cfg.enabled,
         hero: outHero, slideshow: outSlideshow, about: cfg.about, history: cfg.history,
         visimisi: cfg.visimisi, pengurus: outPengurus, sosmed: cfg.sosmed, links: cfg.links
@@ -1351,6 +1368,10 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
       var im = cfg.impressum || {};
       var favTag = cfg.assets.fav ? '<link rel="icon" href="assets/favicon.' + cfg.assets.fav.ext + '">' : (cfg.assets.logo ? '<link rel="icon" href="assets/logo.' + cfg.assets.logo.ext + '">' : "");
       var logo = cfg.assets.logo ? '<img class="lg" src="assets/logo.' + cfg.assets.logo.ext + '" alt="Logo">' : "";
+      var creditStr = "";
+      if (cfg.includeCredit) {
+        creditStr = '<br><span style="opacity:0.8;font-size:11px">Erstellt mit <a href="https://webgenppij.pages.dev" target="_blank" rel="noopener" style="text-decoration:underline;color:inherit">webgenppij.pages.dev</a> · <a href="https://github.com/unbopsingsegalanya/webgenppij/" target="_blank" rel="noopener" style="text-decoration:underline;color:inherit">Quellcode</a></span>';
+      }
       return '<!DOCTYPE html>\n<html lang="de">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Impressum — ' + esc(cfg.name) + "</title>\n" + favTag +
         '\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">\n<style>' + css +
         '\n:root{--p:' + cfg.theme.primary + ";--a:" + cfg.theme.accent + "}</style>\n</head>\n<body>\n" +
@@ -1366,7 +1387,7 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
         (im.address ? esc(im.address).replace(/\n/g, "<br>") : "") +
         ((!im.contactName && !im.contactEmail && !im.address) ? "Siehe zentrales Impressum der PPI Jerman." : "") + "</p>\n" +
         "<h3>Haftung für Inhalte und Links</h3>\n<p>Für eigene Inhalte auf diesen Seiten sind wir nach den allgemeinen Gesetzen verantwortlich. Für die Inhalte externer Links sind ausschließlich deren Betreiber verantwortlich; zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Ergänzend gelten die Haftungs- und Urheberrechtshinweise im zentralen Impressum der PPI Jerman.</p>\n" +
-        '</div></section>\n<footer class="site"><div class="base">© ' + (new Date().getFullYear()) + " " + esc(cfg.name) + "</div></footer>\n</body>\n</html>";
+        '</div></section>\n<footer class="site"><div class="base">© ' + (new Date().getFullYear()) + " " + esc(cfg.name) + creditStr + "</div></footer>\n</body>\n</html>";
     }
     function decapConfigYML() {
       var d = cfg.decap || {};
@@ -1512,6 +1533,12 @@ else{fetch("content/site.json",{cache:"no-store"}).then(function(r){return r.jso
       var el = document.getElementById("inc_adm");
       el.checked = cfg.includeAdmin !== false;
       el.addEventListener("change", function () { cfg.includeAdmin = el.checked; save(); schedulePreview(); });
+    })();
+    // Credit include toggle
+    (function() {
+      var el = document.getElementById("inc_credit");
+      el.checked = cfg.includeCredit === true;
+      el.addEventListener("change", function () { cfg.includeCredit = el.checked; save(); schedulePreview(); });
     })();
     document.getElementById("c_primary").addEventListener("input", function (e) { cfg.theme.primary = e.target.value; renderThemes(); save(); schedulePreview(); });
     document.getElementById("c_accent").addEventListener("input", function (e) { cfg.theme.accent = e.target.value; renderThemes(); save(); schedulePreview(); });
