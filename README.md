@@ -38,19 +38,6 @@ Berkas ZIP yang dihasilkan berisi berkas mandiri dengan struktur berikut:
 
 Proyek ini dibangun menggunakan HTML, CSS dan JavaScript tanpa framework eksternal.
 
-### Cara Menjalankan Secara Lokal untuk Pengembangan
-
-Jika Anda ingin melakukan pengembangan atau modifikasi pada generator ini:
-
-1. Clone repositori ini:
-   ```bash
-   git clone https://github.com/unbopsingsegalanya/webgenppij.git
-   ```
-2. Jalankan server lokal menggunakan Python atau perkakas lain:
-   ```bash
-   python3 -m http.server 8000
-   ```
-3. Buka `http://localhost:8000` di peramban Anda.
 
 ## Penafian (Disclaimer)
 
