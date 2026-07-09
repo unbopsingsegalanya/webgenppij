@@ -36,7 +36,7 @@ Berkas ZIP yang dihasilkan berisi berkas mandiri dengan struktur berikut:
 
 ## Pengembangan & Kontribusi
 
-Proyek ini dibangun menggunakan HTML, CSS (Vanilla), dan JavaScript tanpa framework eksternal untuk memastikan kecepatan muat yang maksimal dan kesederhanaan pemeliharaan.
+Proyek ini dibangun menggunakan HTML, CSS dan JavaScript tanpa framework eksternal.
 
 ### Cara Menjalankan Secara Lokal untuk Pengembangan
 
